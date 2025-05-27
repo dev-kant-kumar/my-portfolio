@@ -102,4 +102,71 @@
   .section-padding {
     @apply px-4 sm:px-6 lg:px-8 py-16 lg:py-24;
   }
+
+  /* Enhanced micro-interactions */
+  .interactive-card {
+    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-portfolio-teal/10;
+  }
+
+  .magnetic-hover {
+    @apply transition-transform duration-300 ease-out;
+  }
+
+  .magnetic-hover:hover {
+    @apply scale-110;
+  }
+
+  .text-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(20, 184, 166, 0.4),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .bounce-in {
+    animation: bounceIn 0.6s ease-out;
+  }
+
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulseGlow {
+    from {
+      box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
+    }
+    to {
+      box-shadow: 0 0 30px rgba(20, 184, 166, 0.6), 0 0 40px rgba(139, 92, 246, 0.3);
+    }
+  }
 }
