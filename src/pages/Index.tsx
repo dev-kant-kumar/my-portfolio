@@ -3,6 +3,9 @@ import React from 'react';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
+import SkillsRadar from '@/components/SkillsRadar';
+import InteractiveTimeline from '@/components/InteractiveTimeline';
+import PerformanceDashboard from '@/components/PerformanceDashboard';
 import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
@@ -22,6 +25,11 @@ const Index = () => {
           <GitHubStats />
         </div>
       </section>
+      
+      {/* Phase 2 Features */}
+      <SkillsRadar />
+      <InteractiveTimeline />
+      <PerformanceDashboard />
       
       <Projects />
       <Contact />
