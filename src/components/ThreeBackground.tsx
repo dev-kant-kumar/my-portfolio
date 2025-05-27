@@ -60,7 +60,11 @@ const FloatingGeometry = ({ position, color }: { position: [number, number, numb
   return (
     <mesh ref={meshRef} position={position}>
       <octahedronGeometry args={[0.1, 0]} />
-      <meshBasicMaterial color={color} transparent opacity={0.6} />
+      <meshBasicMaterial 
+        color={color} 
+        transparent={true} 
+        opacity={0.6} 
+      />
     </mesh>
   );
 };
