@@ -18,7 +18,7 @@ const Contact = () => {
   
     const { name, email, message } = formData;
   
-    const phoneNumber = "91";
+    const phoneNumber = "917294177563";
   
     // Construct the WhatsApp message
     const whatsappMessage = `Hello Dev Kant,%0A%0AI would like to connect with you regarding a potential project or service.%0A%0A*Name:* ${name}%0A*Email:* ${email}%0A*Message:* ${encodeURIComponent(message)}%0A%0ALooking forward to your response.`;
