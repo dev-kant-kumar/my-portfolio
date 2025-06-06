@@ -4,10 +4,10 @@
   <a href="https://www.devkantkumar.com" target="_blank">
     <img src="https://img.shields.io/badge/Live_Demo-Visit_Now-1E90FF?style=for-the-badge&logo=vercel" alt="Live Demo" />
   </a>
-  <a href="https://github.com/dev-kant-kumar/portfolio/blob/main/LICENSE">
+  <a href="https://github.com/dev-kant-kumar/my-portfolio/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-00CED1?style=for-the-badge" alt="License: MIT" />
   </a>
-  <a href="https://github.com/dev-kant-kumar/portfolio">
+  <a href="https://github.com/dev-kant-kumar/my-portfolio">
     <img src="https://img.shields.io/github/stars/dev-kant-kumar/portfolio?style=social" alt="GitHub Stars" />
   </a>
 </p>
