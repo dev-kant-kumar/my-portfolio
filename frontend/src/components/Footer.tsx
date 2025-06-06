@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Github, Linkedin, Youtube } from 'lucide-react';
+import resume from "../assets/documents/resume.pdf"
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -26,20 +27,31 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-white">Quick Links</h4>
-            <ul className="space-y-2">
-              {['About', 'Projects', 'Contact', 'Resume'].map((link) => (
-                <li key={link}>
-                  <a 
-                    href={`#${link.toLowerCase()}`}
-                    className="text-gray-400 hover:text-portfolio-teal transition-colors"
-                  >
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+  <h4 className="text-lg font-semibold text-white">Quick Links</h4>
+  <ul className="space-y-2">
+    {['About', 'Projects', 'Contact', 'Resume'].map((link) => (
+      <li key={link}>
+        {link === 'Resume' ? (
+          <a
+            href={resume}
+            download="Dev-Kant-Kumar-Resume.pdf"
+            className="text-gray-400 hover:text-portfolio-teal transition-colors"
+          >
+            {link}
+          </a>
+        ) : (
+          <a
+            href={`#${link.toLowerCase()}`}
+            className="text-gray-400 hover:text-portfolio-teal transition-colors"
+          >
+            {link}
+          </a>
+        )}
+      </li>
+    ))}
+  </ul>
+</div>
+
 
           {/* Social & Contact */}
           <div className="space-y-4">

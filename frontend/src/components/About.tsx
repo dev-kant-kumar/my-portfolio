@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import MyImg from "../../public/dev.png"
 
 const About = () => {
   const skills = {
@@ -71,7 +72,9 @@ const About = () => {
             <div className="relative">
               <div className="w-full max-w-md mx-auto aspect-square rounded-2xl bg-gradient-to-br from-portfolio-teal/20 to-portfolio-purple/20 p-1">
                 <div className="w-full h-full rounded-2xl bg-portfolio-dark-card flex items-center justify-center">
-                  <div className="text-6xl gradient-text font-bold">Dev</div>
+                  {/* <div className="text-6xl gradient-text font-bold">Dev</div> */}
+                  <img src={MyImg} alt="Dev Kant Kumar - Full Stack Developer" className='h-full w-full object-cover object-top rounded-2xl'/>
+
                 </div>
               </div>
             </div>

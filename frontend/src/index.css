@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -83,13 +82,13 @@
   .gradient-text {
     @apply bg-gradient-to-r from-portfolio-teal via-portfolio-purple to-portfolio-blue bg-clip-text text-transparent;
   }
-  
+
   .gradient-border {
     @apply relative overflow-hidden rounded-lg;
   }
-  
+
   .gradient-border::before {
-    content: '';
+    content: "";
     @apply absolute inset-0 rounded-lg p-[1px] bg-gradient-to-r from-portfolio-teal via-portfolio-purple to-portfolio-blue;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: xor;
@@ -166,7 +165,8 @@
       box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
     }
     to {
-      box-shadow: 0 0 30px rgba(20, 184, 166, 0.6), 0 0 40px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 0 30px rgba(20, 184, 166, 0.6),
+        0 0 40px rgba(139, 92, 246, 0.3);
     }
   }
 }
