@@ -1,15 +1,25 @@
-
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { ArrowDown, Download, Eye, MessageSquare } from 'lucide-react';
-import { motion } from 'framer-motion';
-import ThreeBackground from './ThreeBackground';
-import resume from "../assets/documents/resume.pdf"
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowDown,
+  Download,
+  Eye,
+  MessageSquare,
+  Code2,
+  Zap,
+  Globe,
+  Cpu,
+} from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Hero = () => {
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   const roles = [
     "Frontend Enthusiast",
@@ -17,9 +27,25 @@ const Hero = () => {
     "UI/UX Focused Coder",
     "Full Stack Web Developer",
     "API Integration Specialist",
-    "Clean Code Advocate"
+    "Clean Code Advocate",
   ];
-  
+
+  const techStack = [
+    "React",
+    "Node.js",
+    "MongoDB",
+    "Express",
+    "TypeScript",
+    "Next.js",
+  ];
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   useEffect(() => {
     const currentRole = roles[currentIndex];
@@ -46,16 +72,16 @@ const Hero = () => {
   }, [displayText, currentIndex, isDeleting, roles]);
 
   const scrollToProjects = () => {
-    const element = document.getElementById('projects');
+    const element = document.getElementById("projects");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   const scrollToContact = () => {
-    const element = document.getElementById('contact');
+    const element = document.getElementById("contact");
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -64,192 +90,426 @@ const Hero = () => {
     visible: {
       opacity: 1,
       transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
-      }
-    }
+        delayChildren: 0.5,
+        staggerChildren: 0.15,
+      },
+    },
   };
 
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 30, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 100
-      }
-    }
+        stiffness: 80,
+        damping: 15,
+      },
+    },
+  };
+
+  const floatingVariants = {
+    animate: {
+      y: [-10, 10, -10],
+      transition: {
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
   };
 
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* 3D Background */}
-      <div className="absolute inset-0 z-0">
-        <ThreeBackground />
+    <section
+      ref={heroRef}
+      id="home"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black"
+    >
+      {/* Dynamic mouse-following gradient */}
+      <div
+        className="fixed inset-0 pointer-events-none z-5"
+        style={{
+          background: `radial-gradient(600px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(14, 165, 233, 0.1), transparent 50%)`,
+        }}
+      />
+
+      {/* Animated grid background */}
+      <div className="absolute inset-0 opacity-20">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+            linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px)
+          `,
+            backgroundSize: "50px 50px",
+            animation: "grid-move 20s linear infinite",
+          }}
+        />
       </div>
 
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-portfolio-dark/90 via-portfolio-dark-secondary/90 to-portfolio-dark-card/90 z-10"></div>
-      
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden z-10">
-        <motion.div 
-          animate={{ 
-            x: [0, 100, 0],
-            y: [0, -100, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-1/4 left-1/4 w-64 h-64 bg-portfolio-teal/10 rounded-full blur-3xl"
-        ></motion.div>
-        <motion.div 
-          animate={{ 
-            x: [0, -100, 0],
-            y: [0, 100, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-portfolio-purple/10 rounded-full blur-3xl"
-        ></motion.div>
-        <motion.div 
-          animate={{ 
-            x: [0, 50, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-1/2 left-1/2 w-80 h-80 bg-portfolio-blue/10 rounded-full blur-3xl"
-        ></motion.div>
+      {/* Floating geometric shapes */}
+      <div className="absolute inset-0 overflow-hidden z-10 top-10">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{
+              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.2, 1],
+              x: [0, 100, 0],
+              y: [0, -50, 0],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: 15 + i * 3,
+              repeat: Infinity,
+              delay: i * 2,
+              ease: "linear",
+            }}
+            className={`absolute w-${12 + i * 4} h-${
+              12 + i * 4
+            } border border-portfolio-teal/20 rounded-full`}
+            style={{
+              left: `${10 + i * 15}%`,
+              top: `${10 + i * 10}%`,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* Neural network lines */}
+      <svg className="absolute inset-0 w-full h-full z-10 opacity-10">
+        {[...Array(20)].map((_, i) => (
+          <motion.line
+            key={i}
+            x1={Math.random() * 100 + "%"}
+            y1={Math.random() * 100 + "%"}
+            x2={Math.random() * 100 + "%"}
+            y2={Math.random() * 100 + "%"}
+            stroke="url(#gradient)"
+            strokeWidth="1"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{
+              pathLength: [0, 1, 0],
+              opacity: [0, 0.5, 0],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              delay: i * 0.2,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#0ea5e9" />
+            <stop offset="50%" stopColor="#06b6d4" />
+            <stop offset="100%" stopColor="#8b5cf6" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <motion.div
+        style={{ y }}
+        className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+      >
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Profile Image */}
-          <motion.div variants={itemVariants} className="mb-8">
-            <motion.div 
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-portfolio-teal to-portfolio-purple p-1"
+          {/* Holographic profile */}
+          <motion.div variants={itemVariants} className="mb-12 mt-20">
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              className="relative w-40 h-40 mx-auto"
             >
-              <div className="w-full h-full rounded-full bg-portfolio-dark-card flex items-center justify-center">
-                <motion.div 
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="w-24 h-24 rounded-full bg-gradient-to-r from-portfolio-teal/20 to-portfolio-purple/20 flex items-center justify-center"
+              {/* Outer rotating ring */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 rounded-full border-2 border-transparent bg-gradient-to-r from-portfolio-teal via-portfolio-blue to-portfolio-purple p-0.5"
+              >
+                <div className="w-full h-full rounded-full bg-black" />
+              </motion.div>
+
+              {/* Inner pulsing core */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.1, 1],
+                  boxShadow: [
+                    "0 0 20px rgba(14, 165, 233, 0.5)",
+                    "0 0 40px rgba(14, 165, 233, 0.8)",
+                    "0 0 20px rgba(14, 165, 233, 0.5)",
+                  ],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute inset-4 rounded-full bg-gradient-to-r from-portfolio-teal/20 to-portfolio-purple/20 backdrop-blur-sm flex items-center justify-center border border-portfolio-teal/30"
+              >
+                <motion.div
+                  animate={{ rotate: -360 }}
+                  transition={{
+                    duration: 15,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  className="text-4xl font-bold gradient-text"
                 >
-                  <span className="text-2xl font-bold gradient-text">Dev</span>
+                  <Code2 size={32} />
                 </motion.div>
-              </div>
+              </motion.div>
+
+              {/* Orbiting particles */}
+              {[...Array(4)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 8 + i * 2,
+                    repeat: Infinity,
+                    ease: "linear",
+                    delay: i * 0.5,
+                  }}
+                  className="absolute inset-0"
+                >
+                  <div
+                    className="absolute w-2 h-2 bg-portfolio-teal rounded-full"
+                    style={{
+                      top: "10%",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      boxShadow: "0 0 10px rgba(14, 165, 233, 0.8)",
+                    }}
+                  />
+                </motion.div>
+              ))}
             </motion.div>
           </motion.div>
 
-          {/* Greeting */}
-          <motion.p variants={itemVariants} className="text-lg text-gray-400 mb-4">
-            Hi, I'm
-          </motion.p>
-
-          {/* Name */}
-          <motion.h1 variants={itemVariants} className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
-            <span className="gradient-text">Dev Kant Kumar</span>
-          </motion.h1>
-
-          {/* Animated Role */}
-          <motion.div variants={itemVariants} className="mb-8">
-            <p className="text-xl sm:text-2xl text-gray-300 mb-2">
-              A passionate Full Stack Web Developer
-            </p>
-            <p className="text-lg text-gray-400">
-              <span className="text-portfolio-teal">{displayText}</span>
-              <motion.span 
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity }}
-                className="text-portfolio-teal"
-              >
-                |
-              </motion.span>
-            </p>
+          {/* Glitch effect greeting */}
+          <motion.div variants={itemVariants} className="mb-6">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0.8, 1] }}
+              transition={{ duration: 0.5, times: [0, 0.1, 0.2, 1] }}
+              className="text-xl text-portfolio-teal mb-2 font-mono tracking-wider"
+            >
+              {"> INITIALIZING PORTFOLIO..."}
+            </motion.p>
+            <motion.p
+              className="text-lg text-gray-400 font-mono"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              Hello, World! I'm
+            </motion.p>
           </motion.div>
 
-          {/* Description */}
-          <motion.p variants={itemVariants} className="text-lg text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed">
-            Building modern web experiences with cutting-edge technologies. 
-            Specializing in MERN stack development with a focus on user experience and clean code.
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          {/* Futuristic name display */}
+          <motion.div variants={itemVariants} className="mb-8">
+            <motion.h1
+              className="text-6xl sm:text-7xl lg:text-8xl font-black mb-4 relative"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 100, damping: 10 }}
             >
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-portfolio-teal to-portfolio-blue hover:from-portfolio-teal/80 hover:to-portfolio-blue/80 text-white px-8 py-3 text-lg hover-glow group"
+              <span className="relative inline-block">
+                <span className="absolute inset-0 bg-gradient-to-r from-portfolio-teal via-portfolio-blue to-portfolio-purple bg-clip-text text-transparent blur-sm">
+                  Dev Kant Kumar
+                </span>
+                <span className="relative bg-gradient-to-r from-portfolio-teal via-portfolio-blue to-portfolio-purple bg-clip-text text-transparent">
+                  Dev Kant Kumar
+                </span>
+              </span>
+            </motion.h1>
+
+            {/* Subtitle with scanning effect */}
+            <motion.div className="text-2xl text-gray-300 font-light tracking-wide relative overflow-hidden">
+              <motion.div
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-portfolio-teal/20 to-transparent"
+              />
+              Full Stack Developer & Digital Architect
+            </motion.div>
+          </motion.div>
+
+          {/* Enhanced role animation */}
+          <motion.div variants={itemVariants} className="mb-12">
+            <div className="relative bg-black/50 backdrop-blur-sm border border-portfolio-teal/30 rounded-2xl p-6 max-w-2xl mx-auto">
+              <div className="flex items-center justify-center mb-4">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  <Cpu className="w-6 h-6 text-portfolio-teal mr-3" />
+                </motion.div>
+                <span className="text-sm text-gray-400 font-mono tracking-wider">
+                  CURRENT_ROLE:
+                </span>
+              </div>
+              <motion.p
+                className="text-2xl sm:text-3xl font-bold text-center h-16 flex items-center justify-center"
+                key={displayText}
+              >
+                <span className="bg-gradient-to-r from-portfolio-teal to-portfolio-purple bg-clip-text text-transparent">
+                  {displayText}
+                </span>
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                  className="text-portfolio-teal ml-1 font-thin"
+                >
+                  |
+                </motion.span>
+              </motion.p>
+            </div>
+          </motion.div>
+
+          {/* Tech stack floating badges */}
+          <motion.div variants={itemVariants} className="mb-12">
+            <div className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
+              {techStack.map((tech, index) => (
+                <motion.div
+                  key={tech}
+                  variants={floatingVariants}
+                  animate="animate"
+                  transition={{ delay: index * 0.2 }}
+                  whileHover={{ scale: 1.1, y: -5 }}
+                  className="bg-gradient-to-r from-portfolio-teal/10 to-portfolio-purple/10 backdrop-blur-sm border border-portfolio-teal/30 rounded-full px-4 py-2 text-sm font-semibold text-portfolio-teal hover:shadow-lg hover:shadow-portfolio-teal/25 transition-all cursor-default"
+                >
+                  {tech}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Enhanced description */}
+          <motion.div variants={itemVariants} className="mb-16">
+            <motion.p
+              className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed font-light"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.5 }}
+            >
+              Crafting exceptional digital experiences through innovative code
+              architecture and cutting-edge web technologies.
+              <br />
+              <span className="text-portfolio-teal font-medium">
+                Transforming ideas into scalable, user-centric applications.
+              </span>
+            </motion.p>
+          </motion.div>
+
+          {/* Futuristic CTA buttons */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row gap-6 justify-center mb-20"
+          >
+            <motion.div
+              whileHover={{ scale: 1.05, rotateX: 5 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative group"
+            >
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-portfolio-teal to-portfolio-blue rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+              <Button
+                size="lg"
+                className="relative bg-gradient-to-r from-portfolio-teal to-portfolio-blue text-white px-10 py-4 text-lg font-semibold rounded-2xl border-0 hover:shadow-2xl hover:shadow-portfolio-teal/25 transition-all"
                 onClick={scrollToProjects}
               >
-                <Eye className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
-                View Portfolio
+                <Eye className="mr-3 h-5 w-5" />
+                EXPLORE PORTFOLIO
+                <motion.div
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="ml-2"
+                >
+                  →
+                </motion.div>
               </Button>
             </motion.div>
-            
+
             <motion.div
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, rotateX: 5 }}
               whileTap={{ scale: 0.95 }}
+              className="relative group"
             >
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-portfolio-purple text-portfolio-purple hover:bg-portfolio-purple hover:text-white px-8 py-3 text-lg group"
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-portfolio-purple to-pink-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+              <Button
+                size="lg"
+                className="relative bg-black border-2 border-portfolio-purple text-portfolio-purple hover:bg-portfolio-purple hover:text-white px-10 py-4 text-lg font-semibold rounded-2xl transition-all duration-300"
                 onClick={scrollToContact}
               >
-                <MessageSquare className="mr-2 h-5 w-5 group-hover:rotate-12 transition-transform" />
-                Hire Me
+                <Zap className="mr-3 h-5 w-5" />
+                HIRE ME NOW
               </Button>
             </motion.div>
-            
+
             <motion.div
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, rotateX: 5 }}
               whileTap={{ scale: 0.95 }}
+              className="relative group"
             >
-              <a href={resume} download="Dev-Kant-Kumar-Resume.pdf">
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white px-8 py-3 text-lg group"
+              {/* Placeholder for resume link */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-600 to-gray-400 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+              <Button
+                size="lg"
+                className="relative bg-black border-2 border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white px-10 py-4 text-lg font-semibold rounded-2xl transition-all duration-300"
               >
-                <Download className="mr-2 h-5 w-5 group-hover:bounce transition-transform" />
-                Download Resume
+                <Download className="mr-3 h-5 w-5" />
+                DOWNLOAD CV
               </Button>
-              </a>
             </motion.div>
           </motion.div>
 
-          {/* Scroll indicator */}
-          <motion.div 
-            variants={itemVariants}
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="cursor-pointer"
-            onClick={scrollToProjects}
-          >
-            <ArrowDown className="mx-auto h-6 w-6 text-gray-400 hover:text-portfolio-teal transition-colors" />
+          {/* Animated scroll indicator */}
+          <motion.div variants={itemVariants} className="relative">
+            <motion.div
+              animate={{ y: [0, 15, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="cursor-pointer group"
+              onClick={scrollToProjects}
+            >
+              <div className="relative">
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute inset-0 bg-portfolio-teal/20 rounded-full blur-md"
+                />
+                <ArrowDown className="relative h-8 w-8 text-portfolio-teal group-hover:text-white transition-colors mx-auto" />
+              </div>
+              <p className="text-xs text-gray-500 mt-2 font-mono tracking-wider">
+                SCROLL TO EXPLORE
+              </p>
+            </motion.div>
           </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
+
+      <style jsx>{`
+        @keyframes grid-move {
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(50px, 50px);
+          }
+        }
+
+        .gradient-text {
+          background: linear-gradient(135deg, #0ea5e9, #06b6d4, #8b5cf6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+      `}</style>
     </section>
   );
 };
