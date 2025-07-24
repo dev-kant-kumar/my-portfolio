@@ -1,39 +1,34 @@
+/* Tailwind Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Base Layer: Consolidated Theme Variables and Global Styles */
 @layer base {
   :root {
-    --background: 220 15% 6%;
-    --foreground: 220 10% 95%;
-
-    --card: 220 15% 8%;
-    --card-foreground: 220 10% 95%;
-
-    --popover: 220 15% 8%;
-    --popover-foreground: 220 10% 95%;
-
-    --primary: 180 100% 40%;
-    --primary-foreground: 220 15% 6%;
-
-    --secondary: 260 60% 60%;
-    --secondary-foreground: 220 15% 6%;
-
-    --muted: 220 15% 12%;
-    --muted-foreground: 220 10% 60%;
-
-    --accent: 220 15% 12%;
-    --accent-foreground: 220 10% 95%;
-
-    --destructive: 0 84.2% 60.2%;
+    /* Core Colors */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%; /* Teal-like primary for futuristic feel */
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 220 15% 15%;
-    --input: 220 15% 15%;
-    --ring: 180 100% 40%;
-
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
     --radius: 0.5rem;
 
+    /* Sidebar-Specific Colors */
     --sidebar-background: 220 15% 6%;
     --sidebar-foreground: 220 10% 95%;
     --sidebar-primary: 180 100% 40%;
@@ -43,9 +38,8 @@
     --sidebar-border: 220 15% 15%;
     --sidebar-ring: 180 100% 40%;
   }
-}
 
-@layer base {
+  /* Global Element Styles */
   * {
     @apply border-border;
   }
@@ -59,7 +53,7 @@
     overflow-x: hidden;
   }
 
-  /* Custom scrollbar */
+  /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -78,35 +72,41 @@
   }
 }
 
+/* Components Layer: Custom Components and Utilities */
 @layer components {
+  /* Gradient Text for Futuristic Look */
   .gradient-text {
-    @apply bg-gradient-to-r from-portfolio-teal via-portfolio-purple to-portfolio-blue bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[hsl(180_100%_40%)] via-[hsl(280_100%_60%)] to-[hsl(217.2_91.2%_59.8%)] bg-clip-text text-transparent;
   }
 
+  /* Gradient Border Effect */
   .gradient-border {
     @apply relative overflow-hidden rounded-lg;
   }
 
   .gradient-border::before {
     content: "";
-    @apply absolute inset-0 rounded-lg p-[1px] bg-gradient-to-r from-portfolio-teal via-portfolio-purple to-portfolio-blue;
+    @apply absolute inset-0 rounded-lg p-[1px] bg-gradient-to-r from-[hsl(180_100%_40%)] via-[hsl(280_100%_60%)] to-[hsl(217.2_91.2%_59.8%)];
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: xor;
   }
 
+  /* Hover Glow Effect */
   .hover-glow {
-    @apply transition-all duration-300 hover:shadow-lg hover:shadow-portfolio-teal/20;
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-[hsl(180_100%_40%)/0.2];
   }
 
+  /* Section Padding */
   .section-padding {
     @apply px-4 sm:px-6 lg:px-8 py-16 lg:py-24;
   }
 
-  /* Enhanced micro-interactions */
+  /* Interactive Card Animation */
   .interactive-card {
-    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-portfolio-teal/10;
+    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[hsl(180_100%_40%)/0.1];
   }
 
+  /* Magnetic Hover Effect */
   .magnetic-hover {
     @apply transition-transform duration-300 ease-out;
   }
@@ -115,11 +115,12 @@
     @apply scale-110;
   }
 
+  /* Shimmer Text Animation */
   .text-shimmer {
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(20, 184, 166, 0.4),
+      hsl(180 100% 40% / 0.4),
       transparent
     );
     background-size: 200% 100%;
@@ -135,6 +136,7 @@
     }
   }
 
+  /* Bounce Animation */
   .bounce-in {
     animation: bounceIn 0.6s ease-out;
   }
@@ -156,17 +158,18 @@
     }
   }
 
+  /* Pulse Glow Animation */
   .pulse-glow {
     animation: pulseGlow 2s ease-in-out infinite alternate;
   }
 
   @keyframes pulseGlow {
     from {
-      box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
+      box-shadow: 0 0 20px hsl(180 100% 40% / 0.3);
     }
     to {
-      box-shadow: 0 0 30px rgba(20, 184, 166, 0.6),
-        0 0 40px rgba(139, 92, 246, 0.3);
+      box-shadow: 0 0 30px hsl(180 100% 40% / 0.6),
+        0 0 40px hsl(280 100% 60% / 0.3);
     }
   }
 }

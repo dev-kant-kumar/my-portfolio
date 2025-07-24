@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,6 +14,9 @@ import {
   Github,
   Globe,
 } from "lucide-react";
+import { cva } from "class-variance-authority";
+import { useWindowSize } from "@/hooks/useWindowSize"; // Create this hook
+import { cn } from "@/lib/utils"; // Create this utility
 
 const InteractiveTimeline = () => {
   const [selectedEvent, setSelectedEvent] = useState<number>(0);
@@ -215,10 +218,128 @@ const InteractiveTimeline = () => {
     show: { opacity: 1, x: 0 },
   };
 
+  // Add new animations and styles
+  const cardVariants = cva(
+    "relative p-3 sm:p-5 rounded-xl border transition-all duration-500 overflow-hidden backdrop-blur-sm",
+    {
+      variants: {
+        state: {
+          active:
+            "border-cyan-400/50 bg-gradient-to-br from-cyan-500/10 via-slate-800/50 to-purple-500/10 shadow-2xl shadow-cyan-400/20",
+          inactive:
+            "border-slate-700/50 bg-slate-800/30 hover:border-slate-600/50 hover:bg-slate-800/50",
+        },
+      },
+    }
+  );
+
+  // Add this new component for better animations
+  const FloatingParticles = () => {
+    const { width, height } = useWindowSize();
+    const particles = useMemo(() => {
+      return Array.from({ length: 20 }).map(() => ({
+        x: Math.random() * (width || 1000),
+        y: Math.random() * (height || 1000),
+        size: Math.random() * 2 + 1,
+      }));
+    }, [width, height]);
+
+    return (
+      <div className="absolute inset-0 pointer-events-none">
+        {particles.map((particle, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full"
+            style={{
+              width: particle.size,
+              height: particle.size,
+              x: particle.x,
+              y: particle.y,
+            }}
+            animate={{
+              y: [particle.y - 20, particle.y + 20, particle.y - 20],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  // Update the timeline node component
+  const TimelineNode = ({ isActive, onClick, children }) => {
+    return (
+      <motion.div
+        className={cn(
+          "absolute left-3 sm:left-4 w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 z-10",
+          isActive
+            ? "bg-gradient-to-r from-cyan-400 to-purple-400 border-transparent shadow-lg shadow-cyan-400/50"
+            : "bg-slate-800 border-slate-600 hover:border-slate-500"
+        )}
+        whileHover={{ scale: 1.2 }}
+        animate={isActive ? { scale: [1, 1.2, 1] } : {}}
+        transition={{ duration: 2, repeat: Infinity }}
+        onClick={onClick}
+      >
+        {children}
+      </motion.div>
+    );
+  };
+
+  // First, create a new ImpactMetric component for better organization
+  const ImpactMetric = ({ impact }: { impact: string }) => {
+    const [first, ...rest] = impact.split(" ");
+
+    return (
+      <div className="space-y-4">
+        {/* Highlighted Impact Number */}
+        <motion.div
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="relative mb-2 sm:mb-0">
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg blur opacity-25" />
+            <div className="relative bg-gradient-to-r from-cyan-500/20 to-purple-500/20 backdrop-blur-sm border border-white/10 rounded-lg px-4 py-2">
+              <span className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-cyan-300 to-purple-300 bg-clip-text text-transparent">
+                Digitizing
+              </span>
+            </div>
+          </div>
+          <span className="text-base sm:text-lg lg:text-xl text-slate-400 max-w-[280px] sm:max-w-none">
+            accommodation sector for 10M+ students across India
+          </span>
+        </motion.div>
+
+        {/* Description Box */}
+        <motion.div
+          className="p-4 rounded-xl bg-gradient-to-r from-cyan-500/5 via-slate-800/20 to-purple-500/5 border border-cyan-500/10 backdrop-blur-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="flex items-start gap-3">
+            <Trophy className="w-5 h-5 text-cyan-400 mt-1 flex-shrink-0" />
+            <p className="text-slate-300 leading-relaxed">
+              {timelineEvents[selectedEvent].description}
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <section
       ref={timelineRef}
-      className="relative min-h-screen py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden"
+      className="relative min-h-screen py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden"
       itemScope
       itemType="https://schema.org/Person"
     >
@@ -255,54 +376,34 @@ const InteractiveTimeline = () => {
       </div>
 
       {/* Floating Particles */}
-      <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-cyan-400/40 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              y: [0, -20, 0],
-              opacity: [0.4, 1, 0.4],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
+      <FloatingParticles />
 
-      <div className="relative max-w-7xl mx-auto px-6">
-        {/* Header Section */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Responsive Header Section */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
           <motion.div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 mb-6"
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 mb-4 sm:mb-6"
             whileHover={{ scale: 1.05 }}
           >
-            <Rocket className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm font-medium text-cyan-300">
+            <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />
+            <span className="text-xs sm:text-sm font-medium text-cyan-300">
               Professional Journey
             </span>
           </motion.div>
 
-          <h2 className="text-5xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-5xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent">
             Career{" "}
             <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
               Timeline
             </span>
           </h2>
 
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed px-4 sm:px-6">
             A comprehensive overview of my professional growth, technical
             expertise, and impactful contributions in{" "}
             <strong>full-stack development</strong> and{" "}
@@ -310,22 +411,22 @@ const InteractiveTimeline = () => {
           </p>
         </motion.div>
 
+        {/* Responsive Grid Layout */}
         <motion.div
-          className="grid lg:grid-cols-5 gap-8"
+          className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-8"
           variants={container}
           initial="hidden"
           animate={isInView ? "show" : "hidden"}
         >
-          {/* Enhanced Timeline Navigation */}
-          <div className="lg:col-span-2">
+          {/* Timeline Navigation - Improved Mobile Layout */}
+          <div className="lg:col-span-2 order-2 lg:order-1">
             <div className="relative">
-              {/* Animated Progress Line */}
               <motion.div
-                className="absolute left-6 top-0 w-0.5 bg-gradient-to-b from-cyan-500 via-purple-500 to-slate-700 origin-top"
+                className="absolute left-4 sm:left-6 top-0 w-0.5 bg-gradient-to-b from-cyan-500 via-purple-500 to-slate-700 origin-top"
                 style={{ scaleY: smoothProgress }}
               />
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {timelineEvents.map((event, index) => (
                   <motion.div
                     key={index}
@@ -333,41 +434,41 @@ const InteractiveTimeline = () => {
                     variants={item}
                     whileHover={{ x: 8 }}
                   >
-                    {/* Timeline Node */}
-                    <motion.div
-                      className={`absolute left-4 w-4 h-4 rounded-full border-2 z-10 ${
-                        selectedEvent === index
-                          ? "bg-gradient-to-r from-cyan-400 to-purple-400 border-transparent shadow-lg shadow-cyan-400/50"
-                          : "bg-slate-800 border-slate-600 hover:border-slate-500"
-                      }`}
-                      whileHover={{ scale: 1.2 }}
-                      animate={
-                        selectedEvent === index ? { scale: [1, 1.2, 1] } : {}
-                      }
-                      transition={{ duration: 2, repeat: Infinity }}
+                    {/* Responsive Timeline Node */}
+                    <TimelineNode
+                      isActive={selectedEvent === index}
+                      onClick={() => setSelectedEvent(index)}
                     />
 
-                    {/* Event Card */}
+                    {/* Responsive Event Card */}
                     <motion.div
-                      className={`ml-12 cursor-pointer group ${
-                        selectedEvent === index ? "pb-6" : "pb-4"
+                      className={`ml-8 sm:ml-12 cursor-pointer group ${
+                        selectedEvent === index
+                          ? "pb-4 sm:pb-6"
+                          : "pb-3 sm:pb-4"
                       }`}
                       onClick={() => setSelectedEvent(index)}
                       whileTap={{ scale: 0.98 }}
                     >
                       <div
-                        className={`relative p-5 rounded-xl border transition-all duration-500 overflow-hidden ${
-                          selectedEvent === index
-                            ? "border-cyan-400/50 bg-gradient-to-br from-cyan-500/10 via-slate-800/50 to-purple-500/10 shadow-2xl shadow-cyan-400/20"
-                            : "border-slate-700/50 bg-slate-800/30 hover:border-slate-600/50 hover:bg-slate-800/50"
-                        }`}
+                        className={cn(
+                          cardVariants({
+                            state:
+                              selectedEvent === index ? "active" : "inactive",
+                          }),
+                          "group hover:transform hover:scale-[1.02] transition-all duration-300"
+                        )}
                       >
                         {/* Background Glow */}
                         {selectedEvent === index && (
-                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 animate-pulse" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-purple-500/5 animate-gradient-x" />
                         )}
 
-                        <div className="relative">
+                        {/* Add glassmorphism effect */}
+                        <div className="absolute inset-0 backdrop-blur-[2px] rounded-xl" />
+
+                        {/* Update content container */}
+                        <div className="relative z-10">
                           <div className="flex items-center gap-3 mb-3">
                             <motion.div
                               className={`p-2.5 rounded-lg ${
@@ -433,8 +534,8 @@ const InteractiveTimeline = () => {
             </div>
           </div>
 
-          {/* Enhanced Timeline Details */}
-          <div className="lg:col-span-3">
+          {/* Timeline Details - Improved Mobile Layout */}
+          <div className="lg:col-span-3 order-1 lg:order-2 mb-8 lg:mb-0">
             <motion.div
               key={selectedEvent}
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -442,10 +543,10 @@ const InteractiveTimeline = () => {
               transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
             >
               <Card className="bg-gradient-to-br from-slate-800/80 via-slate-800/60 to-slate-900/80 border-slate-700/50 shadow-2xl backdrop-blur-sm">
-                <CardContent className="p-8">
-                  {/* Header */}
-                  <div className="mb-8">
-                    <div className="flex items-start justify-between mb-6">
+                <CardContent className="p-4 sm:p-6 lg:p-8">
+                  {/* Responsive Header Layout */}
+                  <div className="mb-6 sm:mb-8">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
                       <div className="flex items-center gap-4">
                         <motion.div
                           className="p-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/25"
@@ -498,8 +599,8 @@ const InteractiveTimeline = () => {
                       </div>
                     </div>
 
-                    {/* Meta Information */}
-                    <div className="flex flex-wrap items-center gap-6 text-slate-400 mb-6">
+                    {/* Responsive Meta Information */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-slate-400">
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4 text-cyan-400" />
                         <span>{timelineEvents[selectedEvent].location}</span>
@@ -513,33 +614,51 @@ const InteractiveTimeline = () => {
                         <span>{timelineEvents[selectedEvent].period}</span>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Impact Metric */}
+                  {/* Impact Section */}
+                  <div className="mb-8">
                     <motion.div
-                      className="p-4 rounded-lg bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 mb-6"
-                      whileHover={{ scale: 1.02 }}
+                      className="relative rounded-2xl overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.6 }}
                     >
-                      <div className="flex items-center gap-3">
-                        <Trophy className="w-5 h-5 text-cyan-400" />
-                        <span className="text-cyan-300 font-semibold">
-                          Impact:
-                        </span>
-                        <span className="text-white">
-                          {timelineEvents[selectedEvent].impact}
-                        </span>
+                      {/* Background Elements */}
+                      <div className="absolute inset-0">
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 animate-gradient-x" />
+                        <div className="absolute inset-0 backdrop-blur-sm" />
+                      </div>
+
+                      {/* Content */}
+                      <div className="relative p-6 sm:p-8">
+                        {/* Impact Header */}
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500">
+                            <Trophy className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                            Impact & Achievement
+                          </h3>
+                        </div>
+
+                        {/* Impact Metrics */}
+                        <ImpactMetric
+                          impact={timelineEvents[selectedEvent].impact}
+                        />
                       </div>
                     </motion.div>
                   </div>
 
                   {/* Description */}
-                  <div className="mb-8">
+                  <div className="mb-6">
                     <p className="text-slate-300 leading-relaxed text-lg">
                       {timelineEvents[selectedEvent].description}
                     </p>
                   </div>
 
                   {/* Achievements */}
-                  <div className="mb-8">
+                  <div className="mb-6">
                     <h4 className="text-xl font-bold text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text mb-4 flex items-center gap-2">
                       <Trophy className="w-5 h-5 text-purple-400" />
                       Key Achievements
@@ -568,69 +687,60 @@ const InteractiveTimeline = () => {
                     </div>
                   </div>
 
-                  {/* Technologies */}
-                  <div>
-                    <h4 className="text-xl font-bold text-transparent bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text mb-4 flex items-center gap-2">
-                      <Code className="w-5 h-5 text-blue-400" />
-                      Technology Stack
-                    </h4>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {timelineEvents[selectedEvent].technologies.map(
-                        (tech, index) => (
-                          <motion.div
-                            key={index}
-                            className="relative group cursor-pointer"
-                            onHoverStart={() => setHoveredTech(tech.name)}
-                            onHoverEnd={() => setHoveredTech(null)}
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.05 }}
+                  {/* Responsive Technology Grid */}
+                  <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+                    {timelineEvents[selectedEvent].technologies.map(
+                      (tech, index) => (
+                        <motion.div
+                          key={index}
+                          className="relative group cursor-pointer overflow-hidden"
+                          whileHover={{ scale: 1.05, y: -2 }}
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm" />
+                          <div
+                            className={`relative z-10 p-3 rounded-lg border border-slate-600/50 
+      bg-gradient-to-r ${getTechCategoryColor(tech.category)} 
+      bg-opacity-10 hover:bg-opacity-20 transition-all duration-300 
+      shadow-lg hover:shadow-xl`}
                           >
-                            <div
-                              className={`p-3 rounded-lg border border-slate-600/50 bg-gradient-to-r ${getTechCategoryColor(
-                                tech.category
-                              )} bg-opacity-10 hover:bg-opacity-20 transition-all duration-300 shadow-lg hover:shadow-xl`}
-                            >
-                              <div className="text-white font-medium text-sm mb-1">
-                                {tech.name}
-                              </div>
-                              <div className="text-xs text-slate-400">
-                                {tech.category}
-                              </div>
-                              <div className="absolute top-2 right-2">
-                                <div
-                                  className={`w-2 h-2 rounded-full ${
-                                    tech.level === "Expert"
-                                      ? "bg-green-400"
-                                      : tech.level === "Advanced"
-                                      ? "bg-blue-400"
-                                      : "bg-yellow-400"
-                                  }`}
-                                />
-                              </div>
+                            <div className="text-white font-medium text-sm mb-1">
+                              {tech.name}
                             </div>
+                            <div className="text-xs text-slate-400">
+                              {tech.category}
+                            </div>
+                            <div className="absolute top-2 right-2">
+                              <div
+                                className={`w-2 h-2 rounded-full ${
+                                  tech.level === "Expert"
+                                    ? "bg-green-400"
+                                    : tech.level === "Advanced"
+                                    ? "bg-blue-400"
+                                    : "bg-yellow-400"
+                                }`}
+                              />
+                            </div>
+                          </div>
 
-                            {/* Tooltip */}
-                            {hoveredTech === tech.name && (
-                              <motion.div
-                                className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-slate-900 text-white text-xs rounded-lg border border-slate-700 whitespace-nowrap z-50"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                              >
-                                {tech.level} Level
-                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45" />
-                              </motion.div>
-                            )}
-                          </motion.div>
-                        )
-                      )}
-                    </div>
+                          {/* Tooltip */}
+                          {hoveredTech === tech.name && (
+                            <motion.div
+                              className="absolute -top-12 left-1/2 transform -translate-x-1/2 px-3 py-1 bg-slate-900 text-white text-xs rounded-lg border border-slate-700 whitespace-nowrap z-50"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                            >
+                              {tech.level} Level
+                              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45" />
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      )
+                    )}
                   </div>
 
-                  {/* SEO Keywords */}
-                  <div className="mt-6 p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
-                    <div className="flex flex-wrap gap-2">
+                  {/* Responsive Keywords */}
+                  <div className="mt-4 sm:mt-6 p-3 sm:p-4 rounded-lg bg-slate-800/30 border border-slate-700/30">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {timelineEvents[selectedEvent].keywords.map(
                         (keyword, index) => (
                           <span
@@ -649,26 +759,25 @@ const InteractiveTimeline = () => {
           </div>
         </motion.div>
 
-        {/* Call to Action */}
+        {/* Responsive Call to Action */}
         <motion.div
-          className="text-center mt-16"
+          className="text-center mt-8 sm:mt-12 lg:mt-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
           <motion.div
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-600 to-purple-600 text-white font-semibold rounded-full hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+            className="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-cyan-600 to-purple-600 text-white text-sm sm:text-base font-semibold rounded-full hover:from-cyan-500 hover:to-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => {
-              const section = document.getElementById("contact");
-              if (section) {
-                section.scrollIntoView({ behavior: "smooth" });
-              }
+              document
+                .getElementById("contact")
+                ?.scrollIntoView({ behavior: "smooth" });
             }}
           >
             <span>Let's Build Something Amazing Together</span>
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </motion.div>
         </motion.div>
       </div>

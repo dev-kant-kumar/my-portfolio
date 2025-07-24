@@ -501,8 +501,8 @@ Feel free to explore any aspect of Dev's professional journey! 🚀`,
       >
         <div className="relative">
           {/* Pulsing background effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full animate-pulse opacity-75"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full animate-ping opacity-50"></div>
+          {/* <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full animate-pulse opacity-75"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full animate-ping opacity-50"></div> */}
 
           <Button
             onClick={() => setIsOpen(!isOpen)}

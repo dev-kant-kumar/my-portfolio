@@ -133,6 +133,36 @@ export default {
             boxShadow: "0 0 30px rgba(20, 184, 166, 0.5)",
           },
         },
+        "gradient-y": {
+          "0%, 100%": {
+            "background-size": "400% 400%",
+            "background-position": "center top",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "center center",
+          },
+        },
+        "gradient-x": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
+        "gradient-xy": {
+          "0%, 100%": {
+            "background-size": "400% 400%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -141,6 +171,9 @@ export default {
         "slide-in-left": "slide-in-left 0.6s ease-out",
         float: "float 3s ease-in-out infinite",
         glow: "glow 2s ease-in-out infinite alternate",
+        "gradient-x": "gradient-x 15s ease infinite",
+        "gradient-y": "gradient-y 15s ease infinite",
+        "gradient-xy": "gradient-xy 15s ease infinite",
       },
     },
   },

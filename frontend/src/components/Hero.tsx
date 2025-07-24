@@ -11,6 +11,7 @@ import {
   Cpu,
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import resume from "../assets/documents/resume.pdf";
 
 const Hero = () => {
   const [displayText, setDisplayText] = useState("");
@@ -459,13 +460,16 @@ const Hero = () => {
             >
               {/* Placeholder for resume link */}
               <div className="absolute -inset-0.5 bg-gradient-to-r from-gray-600 to-gray-400 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-              <Button
-                size="lg"
-                className="relative bg-black border-2 border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white px-10 py-4 text-lg font-semibold rounded-2xl transition-all duration-300"
-              >
-                <Download className="mr-3 h-5 w-5" />
-                DOWNLOAD CV
-              </Button>
+
+              <a href={resume} download="Dev-Kant-Kumar-Resume.pdf">
+                <Button
+                  size="lg"
+                  className="relative bg-black border-2 border-gray-600 text-gray-300 hover:bg-gray-600 hover:text-white px-10 py-4 text-lg font-semibold rounded-2xl transition-all duration-300"
+                >
+                  <Download className="mr-3 h-5 w-5" />
+                  DOWNLOAD RESUME
+                </Button>
+              </a>
             </motion.div>
           </motion.div>
 
