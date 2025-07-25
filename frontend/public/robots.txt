@@ -1,3 +1,6 @@
+# robots.txt for https://www.devkantkumar.com
+
+# Allow all major crawlers
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +13,15 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# Catch-all for all other bots
 User-agent: *
 Allow: /
+
+# Add sitemap to guide crawlers
+Sitemap: https://www.devkantkumar.com/sitemap.xml
+
+# Optional: Block unnecessary folders (uncomment if they exist)
+# Disallow: /api/
+# Disallow: /admin/
+# Disallow: /temp/
+# Disallow: /node_modules/
