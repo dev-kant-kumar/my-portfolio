@@ -552,9 +552,9 @@ Feel free to explore any aspect of Dev's professional journey! 🚀`,
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
             exit={{ opacity: 0, y: 100, scale: 0.8, rotateX: 15 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className={`fixed bottom-24 right-0 bg-gray-900/95 backdrop-blur-xl border border-cyan-500/30 rounded-2xl shadow-2xl shadow-cyan-500/10 z-[1000] flex flex-col transition-all duration-300 ${
-              isMinimized ? "w-80 h-16" : "w-[] h-[40rem]"
-            }`}
+            className={`fixed bottom-24 right-0 bg-gray-900/95 backdrop-blur-xl border border-cyan-500/30 rounded-2xl shadow-2xl shadow-cyan-500/10 z-[1000] flex flex-col transition-all duration-300
+  ${isMinimized ? "w-80 h-16" : "w-full max-w-md h-[85vh] sm:w-96 sm:h-[40rem]"}
+`}
           >
             {/* Enhanced Header */}
             <div className="p-4 border-b border-cyan-500/20 bg-gradient-to-r from-gray-900/90 to-gray-800/90 rounded-t-2xl backdrop-blur-sm">
