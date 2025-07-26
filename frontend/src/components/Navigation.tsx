@@ -1,6 +1,19 @@
 import React, { useState, useEffect, useRef, memo, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Download, ExternalLink, Sun, Moon, Code2, Cpu, Zap, Globe, Database, Rocket } from "lucide-react";
+import {
+  Menu,
+  X,
+  Download,
+  ExternalLink,
+  Sun,
+  Moon,
+  Code2,
+  Cpu,
+  Zap,
+  Globe,
+  Database,
+  Rocket,
+} from "lucide-react";
 import resume from "../assets/documents/resume.pdf";
 
 interface NavItem {
@@ -11,24 +24,44 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: "home", label: "Home", icon: Rocket, gradient: "from-blue-400 via-purple-500 to-pink-500" },
-  { id: "about", label: "About", icon: Cpu, gradient: "from-emerald-400 via-teal-500 to-cyan-500" },
-  { id: "projects", label: "Projects", icon: Code2, gradient: "from-orange-400 via-red-500 to-pink-500" },
-  { id: "contact", label: "Contact", icon: Globe, gradient: "from-violet-400 via-purple-500 to-indigo-500" },
+  {
+    id: "home",
+    label: "Home",
+    icon: Rocket,
+    gradient: "from-blue-400 via-purple-500 to-pink-500",
+  },
+  {
+    id: "about",
+    label: "About",
+    icon: Cpu,
+    gradient: "from-emerald-400 via-teal-500 to-cyan-500",
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    icon: Code2,
+    gradient: "from-orange-400 via-red-500 to-pink-500",
+  },
+  {
+    id: "contact",
+    label: "Contact",
+    icon: Globe,
+    gradient: "from-violet-400 via-purple-500 to-indigo-500",
+  },
 ];
 
 // Neural Network Particle System
 const ParticleSystem = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>();
-  
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
+
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    
+
     const particles: Array<{
       x: number;
       y: number;
@@ -38,15 +71,15 @@ const ParticleSystem = memo(() => {
       opacity: number;
       color: string;
     }> = [];
-    
+
     const connections: Array<{
       from: number;
       to: number;
       opacity: number;
     }> = [];
-    
-    const colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b'];
-    
+
+    const colors = ["#3b82f6", "#8b5cf6", "#ec4899", "#10b981", "#f59e0b"];
+
     // Initialize particles
     for (let i = 0; i < 50; i++) {
       particles.push({
@@ -56,21 +89,21 @@ const ParticleSystem = memo(() => {
         vy: (Math.random() - 0.5) * 0.5,
         size: Math.random() * 2 + 1,
         opacity: Math.random() * 0.5 + 0.2,
-        color: colors[Math.floor(Math.random() * colors.length)]
+        color: colors[Math.floor(Math.random() * colors.length)],
       });
     }
-    
+
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       // Update particles
       particles.forEach((particle, i) => {
         particle.x += particle.vx;
         particle.y += particle.vy;
-        
+
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
-        
+
         // Draw particle
         ctx.save();
         ctx.globalAlpha = particle.opacity;
@@ -79,15 +112,15 @@ const ParticleSystem = memo(() => {
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
-        
+
         // Create connections
         particles.forEach((otherParticle, j) => {
           if (i >= j) return;
-          
+
           const dx = particle.x - otherParticle.x;
           const dy = particle.y - otherParticle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          
+
           if (distance < 100) {
             const opacity = (1 - distance / 100) * 0.2;
             ctx.save();
@@ -102,32 +135,32 @@ const ParticleSystem = memo(() => {
           }
         });
       });
-      
+
       animationRef.current = requestAnimationFrame(animate);
     };
-    
+
     const handleResize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
-    
+
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     animate();
-    
+
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
   }, []);
-  
+
   return (
     <canvas
       ref={canvasRef}
       className="absolute inset-0 pointer-events-none opacity-30"
-      style={{ width: '100%', height: '100%' }}
+      style={{ width: "100%", height: "100%" }}
     />
   );
 });
@@ -135,95 +168,107 @@ const ParticleSystem = memo(() => {
 ParticleSystem.displayName = "ParticleSystem";
 
 // Holographic Button Component
-const HolographicButton = memo(({ 
-  children, 
-  isActive, 
-  onClick, 
-  className = "",
-  variant = "default"
-}: {
-  children: React.ReactNode;
-  isActive?: boolean;
-  onClick?: () => void;
-  className?: string;
-  variant?: "default" | "icon";
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  return (
-    <button
-      className={`
+const HolographicButton = memo(
+  ({
+    children,
+    isActive,
+    onClick,
+    className = "",
+    variant = "default",
+  }: {
+    children: React.ReactNode;
+    isActive?: boolean;
+    onClick?: () => void;
+    className?: string;
+    variant?: "default" | "icon";
+  }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+      <button
+        className={`
         relative group overflow-hidden rounded-xl
         ${variant === "icon" ? "p-3" : "px-6 py-3"}
-        ${isActive 
-          ? "bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 border-2 border-blue-400/50" 
-          : "bg-white/5 border border-white/10 hover:border-white/30"
+        ${
+          isActive
+            ? "bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 border-2 border-blue-400/50"
+            : "bg-white/5 border border-white/10 hover:border-white/30"
         }
         backdrop-blur-md transition-all duration-500 
         hover:shadow-2xl hover:shadow-blue-500/25
         ${className}
       `}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
-    >
-      {/* Holographic Overlay */}
-      <div className={`
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={onClick}
+      >
+        {/* Holographic Overlay */}
+        <div
+          className={`
         absolute inset-0 opacity-0 group-hover:opacity-100 
         bg-gradient-to-r from-transparent via-white/10 to-transparent
         -translate-x-full group-hover:translate-x-full
         transition-all duration-1000 ease-out
-      `} />
-      
-      {/* Neural Scan Lines */}
-      {isHovered && (
-        <div className="absolute inset-0">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-full h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60"
-              style={{
-                top: `${20 + i * 30}%`,
-                animation: `scanLine 2s ease-in-out infinite ${i * 0.3}s`,
-              }}
-            />
-          ))}
+      `}
+        />
+
+        {/* Neural Scan Lines */}
+        {isHovered && (
+          <div className="absolute inset-0">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-full h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60"
+                style={{
+                  top: `${20 + i * 30}%`,
+                  animation: `scanLine 2s ease-in-out infinite ${i * 0.3}s`,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="relative z-10 flex items-center justify-center space-x-2">
+          {children}
         </div>
-      )}
-      
-      {/* Content */}
-      <div className="relative z-10 flex items-center justify-center space-x-2">
-        {children}
-      </div>
-      
-      {/* Quantum Glow Effect */}
-      {isActive && (
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-xl" />
-      )}
-      
-      <style jsx>{`
-        @keyframes scanLine {
-          0%, 100% { opacity: 0; transform: translateY(-10px); }
-          50% { opacity: 1; transform: translateY(0px); }
-        }
-      `}</style>
-    </button>
-  );
-});
+
+        {/* Quantum Glow Effect */}
+        {isActive && (
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-xl" />
+        )}
+
+        <style jsx>{`
+          @keyframes scanLine {
+            0%,
+            100% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            50% {
+              opacity: 1;
+              transform: translateY(0px);
+            }
+          }
+        `}</style>
+      </button>
+    );
+  }
+);
 
 HolographicButton.displayName = "HolographicButton";
 
 // Quantum Avatar Component
 const QuantumAvatar = memo(() => {
   const [rotation, setRotation] = useState(0);
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setRotation(prev => (prev + 1) % 360);
+      setRotation((prev) => (prev + 1) % 360);
     }, 50);
     return () => clearInterval(interval);
   }, []);
-  
+
   return (
     <div className="relative">
       {/* Orbital Rings */}
@@ -239,14 +284,17 @@ const QuantumAvatar = memo(() => {
           />
         ))}
       </div>
-      
+
       {/* Avatar Core */}
       <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-gradient-to-r from-blue-400 via-purple-500 to-pink-500 p-0.5">
         <div className="w-full h-full rounded-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-          <Cpu className="w-8 h-8 text-blue-400" style={{ transform: `rotate(${rotation}deg)` }} />
+          <Cpu
+            className="w-8 h-8 text-blue-400"
+            style={{ transform: `rotate(${rotation}deg)` }}
+          />
         </div>
       </div>
-      
+
       {/* Quantum Particles */}
       <div className="absolute inset-0">
         {[...Array(6)].map((_, i) => (
@@ -254,23 +302,33 @@ const QuantumAvatar = memo(() => {
             key={i}
             className="absolute w-1 h-1 bg-blue-400 rounded-full"
             style={{
-              top: '50%',
-              left: '50%',
+              top: "50%",
+              left: "50%",
               animation: `quantumOrbit ${2 + i * 0.5}s linear infinite`,
               transformOrigin: `${20 + i * 5}px 0`,
             }}
           />
         ))}
       </div>
-      
+
       <style jsx>{`
         @keyframes orbit {
-          from { transform: rotate(0deg) scale(var(--scale, 1)); }
-          to { transform: rotate(360deg) scale(var(--scale, 1)); }
+          from {
+            transform: rotate(0deg) scale(var(--scale, 1));
+          }
+          to {
+            transform: rotate(360deg) scale(var(--scale, 1));
+          }
         }
         @keyframes quantumOrbit {
-          from { transform: translate(-50%, -50%) rotate(0deg) translateX(25px) rotate(0deg); }
-          to { transform: translate(-50%, -50%) rotate(360deg) translateX(25px) rotate(-360deg); }
+          from {
+            transform: translate(-50%, -50%) rotate(0deg) translateX(25px)
+              rotate(0deg);
+          }
+          to {
+            transform: translate(-50%, -50%) rotate(360deg) translateX(25px)
+              rotate(-360deg);
+          }
         }
       `}</style>
     </div>
@@ -286,51 +344,53 @@ const FuturisticNavigation = memo(() => {
   const [scrollY, setScrollY] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const navRef = useRef<HTMLDivElement>(null);
-  
+
   // Advanced scroll tracking
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
-      
+
       // Advanced section detection with intersection observer
-      const sections = navItems.map(item => item.id);
-      const current = sections.find(section => {
+      const sections = navItems.map((item) => item.id);
+      const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (!element) return false;
         const rect = element.getBoundingClientRect();
         return rect.top <= 100 && rect.bottom >= 100;
       });
-      
+
       if (current) setActiveSection(current);
     };
-    
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
+
   // Mouse tracking for holographic effects
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
-  
+
   // Dynamic navigation styles based on scroll
   const navStyles = useMemo(() => {
     const progress = Math.min(scrollY / 100, 1);
     return {
       backgroundColor: `rgba(15, 23, 42, ${0.1 + progress * 0.8})`,
-      backdropFilter: `blur(${progress * 20}px) saturate(${1 + progress * 0.5})`,
+      backdropFilter: `blur(${progress * 20}px) saturate(${
+        1 + progress * 0.5
+      })`,
       borderColor: `rgba(59, 130, 246, ${0.1 + progress * 0.3})`,
       transform: `scale(${1 - progress * 0.02})`,
       borderRadius: `${progress * 16}px`,
       margin: `0 ${progress * 16}px`,
     };
   }, [scrollY]);
-  
+
   return (
     <>
       {/* SEO Optimized Structured Data */}
@@ -552,12 +612,14 @@ const FuturisticNavigation = memo(() => {
 
                 {/* Mobile Resume Button */}
                 <div className="p-4 border-t border-white/10">
-                  <HolographicButton className="w-full justify-center">
-                    <Download className="w-5 h-5 text-emerald-400" />
-                    <span className="text-emerald-400 font-medium">
-                      Download Resume
-                    </span>
-                  </HolographicButton>
+                  <a href={resume} download="Dev-Kant-Kumar-Resume.pdf">
+                    <HolographicButton className="w-full justify-center">
+                      <Download className="w-5 h-5 text-emerald-400" />
+                      <span className="text-emerald-400 font-medium">
+                        Download Resume
+                      </span>
+                    </HolographicButton>
+                  </a>
                 </div>
               </div>
             </div>

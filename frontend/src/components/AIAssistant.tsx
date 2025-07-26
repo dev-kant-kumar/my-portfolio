@@ -501,8 +501,8 @@ Feel free to explore any aspect of Dev's professional journey! 🚀`,
       >
         <div className="relative">
           {/* Pulsing background effect */}
-          {/* <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full animate-pulse opacity-75"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full animate-ping opacity-50"></div> */}
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full animate-pulse opacity-75"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full animate-ping opacity-50"></div>
 
           <Button
             onClick={() => setIsOpen(!isOpen)}
@@ -552,8 +552,8 @@ Feel free to explore any aspect of Dev's professional journey! 🚀`,
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
             exit={{ opacity: 0, y: 100, scale: 0.8, rotateX: 15 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className={`fixed bottom-24 right-6 bg-gray-900/95 backdrop-blur-xl border border-cyan-500/30 rounded-2xl shadow-2xl shadow-cyan-500/10 z-40 flex flex-col transition-all duration-300 ${
-              isMinimized ? "w-80 h-16" : "w-96 h-[32rem]"
+            className={`fixed bottom-24 right-0 bg-gray-900/95 backdrop-blur-xl border border-cyan-500/30 rounded-2xl shadow-2xl shadow-cyan-500/10 z-[1000] flex flex-col transition-all duration-300 ${
+              isMinimized ? "w-80 h-16" : "w-[] h-[40rem]"
             }`}
           >
             {/* Enhanced Header */}
