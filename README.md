@@ -18,7 +18,7 @@
   <a href="https://www.devkantkumar.com" target="_blank"><strong>🔗 Explore the Live Website</strong></a>
 </p>
 
-<img width="2879" height="1528" alt="Screenshot 2025-07-25 120550" src="https://github.com/user-attachments/assets/eb5725e8-087b-434a-832e-6e8938b460db" />
+<img width="2779" height="1542" alt="Screenshot 2025-07-26 122727" src="https://github.com/user-attachments/assets/12312db1-ece9-422c-8e9b-28a40ee015af" />
 
 ## 🧑‍💻 About
 
