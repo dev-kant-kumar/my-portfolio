@@ -223,7 +223,7 @@ const Hero = () => {
           animate="visible"
         >
           {/* Holographic profile */}
-          <motion.div variants={itemVariants} className="mb-12 mt-20">
+          <motion.div variants={itemVariants} className="mb-12 mt-32">
             <motion.div
               whileHover={{ scale: 1.1 }}
               className="relative w-40 h-40 mx-auto"
